@@ -1,10 +1,13 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TestingForTinex
@@ -13,7 +16,7 @@ namespace TestingForTinex
     public class TestingForTinex
     {
         IWebDriver driver;
-        IWebDriver wait;
+        WebDriverWait wait;
 
         [SetUp]
         public void setiranje()
@@ -22,6 +25,7 @@ namespace TestingForTinex
             driver.Manage().Window.Maximize();
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(12));
 
 
         }
@@ -33,7 +37,7 @@ namespace TestingForTinex
         }
 
         [Test]
-        [Category("Check if user can be logged in after entering valid credentials")]
+        
         public void testLogiranjeZaTinexPozitinoScenario()
         {
 
@@ -50,7 +54,7 @@ namespace TestingForTinex
 
         }
         [Test]
-        [Category("Check if user can be logged in after entering invalid credentials")]
+       
         public void testLogiranjeZaTinexNegativnoScenario()
         {
             LoginPage page = new LoginPage(driver);
@@ -74,7 +78,7 @@ namespace TestingForTinex
 
         }
         [Test]
-        [Category("After Login At osnovniproizvodi Check If Card Zelatin is OK")]
+        
         public void CheckIfUserCanSelectCard()
         {
             LoginPage page = new LoginPage(driver);
@@ -146,7 +150,35 @@ namespace TestingForTinex
             Assert.IsTrue(page2.naslovZaMonin.Text.Contains("MONINI"));
 
 
-         
+        }
+        [Test]
+        public void CheckPijalociCanBeOppened()
+        {
+            LoginPage page = new LoginPage(driver);
+            page.GoTo();
+            page.login.Click();
+            page.LoginTinex("dejanovski_a@yahoo.com", "aceecar88");
+            MainPage page2 = new MainPage(driver);
+            page2.openVater();
+            Assert.IsTrue(page2.alkoholniPijaloci.Text.Contains("Алкохолни пијалоци"));
+            
+            
+
+        }
+        [Test]
+        public void CheckIfSliderIsWorkingOnVaterPage()
+        {
+            LoginPage page = new LoginPage(driver);
+            page.GoTo();
+            page.login.Click();
+            page.LoginTinex("dejanovski_a@yahoo.com", "aceecar88");
+            MainPage page2 = new MainPage(driver);
+            page2.openVater();
+            wait.Until(ExpectedConditions.ElementToBeClickable(page2.slajderVoda)).Click();
+            string vrednostNaValue = page2.brojNaStrana.GetAttribute("value");
+            Assert.IsTrue(vrednostNaValue.Contains("2"));
+
+             
 
 
         }
