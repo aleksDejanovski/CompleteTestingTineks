@@ -61,7 +61,7 @@ namespace TestingForTinex
             page.GoTo();
             page.login.Click();
             page.LoginTinex("dd", "ssd");
-            Assert.IsTrue(driver.FindElement(By.Id("ctl00_btnLogOut")).Text.Contains("Одјавете се"));
+            Assert.IsTrue(page.nevalidenLoginPoraka.Text.Contains("Нема регистрирано таков корисник"));
 
         }
         [Test]
